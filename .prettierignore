@@ -1,0 +1,12 @@
+# directories
+**/broadcast
+**/cache
+**/lib
+**/out
+**/node_modules
+
+# files
+*.env
+*.log
+.pnp.*
+coverage.json

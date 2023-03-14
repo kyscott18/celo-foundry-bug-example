@@ -1,0 +1,71 @@
+name: "CI"
+
+env:
+  FOUNDRY_PROFILE: "ci"
+  RPC_URL_GOERLI: ${{ secrets.RPC_URL_GOERLI }}
+
+on:
+  pull_request:
+    branches:
+      - "master"
+  push:
+    branches:
+      - "master"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: "pnpm"
+      - uses: "foundry-rs/foundry-toolchain@v1"
+        with:
+          version: "nightly"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: "pnpm"
+      - uses: "foundry-rs/foundry-toolchain@v1"
+        with:
+          version: "nightly"
+      - run: pnpm install --frozen-lockfile
+      - run: forge build
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: "recursive"
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: "pnpm"
+      - uses: "foundry-rs/foundry-toolchain@v1"
+        with:
+          version: "nightly"
+      - run: pnpm install --frozen-lockfile
+      - run: forge test
